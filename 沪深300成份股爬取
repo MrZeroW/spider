@@ -1,0 +1,52 @@
+__author = 'Mr_ZeroW'
+import urllib2
+from lxml import etree
+import pandas as pd
+import numpy as np
+
+class HS300(object):
+    
+    def __init__(self):
+        
+        self.url = 'http://www.askci.com/news/finance/20160530/16211122679.shtml'
+        self.html = ''
+    
+    #获取网页代码
+    def GetPage(self):
+        
+        request = urllib2.Request(self.url)
+        response = urllib2.urlopen(request)
+        html = response.read()
+        self.html = html
+        return self.GetCode()
+        
+    #获取股票代码名字、存入DataFrame,文件'Code_ID_Name.csv'
+    def GetCode(self):
+        CodeList = []
+        tree = etree.HTML(self.html)
+        nodes = tree.xpath('//*[@id="DivNewsContent"]/table/tbody/tr/td')
+        for node in nodes:
+            CodeList.append(node.text)
+        CodeID = CodeList[2 : : 2]
+        CodeName = CodeList[3 : : 2]
+        CodeDF = pd.DataFrame({
+            'ID': CodeID,
+            'Name': CodeName
+        }, index = range(1, 301))
+        CodeDF.to_csv('Code_ID_Name.csv',encoding= 'utf-8')
+        print '已存入文件："Code_ID_Name.csv"'
+        return None
+    
+    def start(self):
+        go = raw_input('按Enter继续，Q退出\n')
+        if not go:
+            return self.GetPage()
+        elif go == 'Q' or go == 'q':
+            return 
+        else:
+            print '胸带，看提示！！！妈蛋'
+            return self.start()
+        
+Spider = HS300()
+Spider.start()
+        
