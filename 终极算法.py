@@ -68,7 +68,7 @@ def iden():
         os.write(f, '%d:%s 已识别\n' % (count,name))
         os.write(f, '费时 %d秒\n' % delta.seconds)
     signal = 'end'
-    os.close(f)
+    os.fsync(f)
     return signal
         
 def func():
