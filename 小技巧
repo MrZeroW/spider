@@ -1,0 +1,18 @@
+好用的库 wget progressbar
+#抓取网页
+import wget
+wget.download(url, out)
+
+#进度条
+from progressbar import *
+import sys,time
+
+
+widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>-=')),
+           ' ', ETA(), ' ', FileTransferSpeed()]
+pbar = ProgressBar(widgets=widgets, maxval=100).start()
+for i in range(101):
+  # do something
+    pbar.update(i)
+    time.sleep(0.1)
+pbar.finish()
